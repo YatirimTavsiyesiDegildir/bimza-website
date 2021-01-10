@@ -1,20 +1,47 @@
 // FILE POND START
 // Import React FilePond
-import { FilePond} from "react-filepond";
+import {FilePond} from "react-filepond";
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
 
 // FILE POND END
 
-import React, { Component} from 'react';
+import React, {Component} from 'react';
 import './App.css';
-import { withAuthenticator } from 'aws-amplify-react'
-import Amplify, { Auth } from 'aws-amplify';
+import {withAuthenticator} from 'aws-amplify-react'
+import Amplify, {Auth} from 'aws-amplify';
 import aws_exports from './aws-exports';
+
 Amplify.configure(aws_exports);
 
 const NodeRSA = require('node-rsa');
+
+const logoStyle = {
+    width: 100,
+    height: 100,
+    marginTop: 20
+};
+const fileUpload = {
+    alignSelf: 'center',
+    justifySelf: 'center',
+    width: '60%'
+};
+const container = {
+    display: "flex",
+    flexDirection: 'column',
+    justifyContent: "center",
+    alignItems: "center"
+};
+const lineBreak = {
+    height: 20,
+};
+
+const button = {
+    backgroundColor: '#42A899',
+    height: 60,
+    width: 200
+};
 
 // Our app
 class App extends Component {
@@ -32,7 +59,8 @@ class App extends Component {
     }
 
     // SIGNING
-    FilepondServerFile = {process: (fieldName, file, metadata, load, error, progress, abort) => {
+    FilepondServerFile = {
+        process: (fieldName, file, metadata, load, error, progress, abort) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = function (e) {
@@ -40,9 +68,11 @@ class App extends Component {
                 load("");
                 return;
             }.bind(this);
-    }};
+        }
+    };
 
-    FilepondServerKey = {process: (fieldName, file, metadata, load, error, progress, abort) => {
+    FilepondServerKey = {
+        process: (fieldName, file, metadata, load, error, progress, abort) => {
             const reader = new FileReader();
             reader.readAsText(file);
             reader.onloadend = function (e) {
@@ -50,7 +80,8 @@ class App extends Component {
                 load("");
                 return;
             }.bind(this);
-    }};
+        }
+    };
 
     handleInit() {
         console.log("FilePond instance has initialised", this.filePond);
@@ -80,7 +111,7 @@ class App extends Component {
                 xhr.setRequestHeader("Content-Type", "application/json");
                 xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
 
-                xhr.onreadystatechange = function() { // Call a function when the state changes.
+                xhr.onreadystatechange = function () { // Call a function when the state changes.
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                         console.log('Successful.');
                     }
@@ -93,41 +124,53 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <h2>Lutfen imzalamak istediginiz dosayai asagiya yukleyiniz.</h2>
-                <FilePond
-                    ref={ref => (this.filePond = ref)}
-                    files={this.state.file}
-                    allowMultiple={false}
-                    server = {this.FilepondServerFile}
-                    name="files"
-                    oninit={() => this.handleInit()}
-                    onupdatefiles={fileItems => {
-                        // Set currently active file objects to this.state
-                        this.setState({
-                            file: fileItems.map(fileItem => fileItem.file)
-                        });
-                    }}
-                />
-                <h2>Lutfen e-imzanizi asagiya yukleyiniz.</h2>
-                <FilePond
-                    ref={ref => (this.pond = ref)}
-                    files={this.state.keyFile}
-                    allowMultiple={false}
-                    server = {this.FilepondServerKey}
-                    name="key_files"
-                    oninit={() => this.handleInitKey()}
-                    onupdatefiles={fileItems => {
-                        // Set currently active file objects to this.state
-                        this.setState({
-                            keyFile: fileItems.map(fileItem => fileItem.file)
-                        });
-                    }}
-                    //instantUpload={false}
-                    allowFileEncode={true}
-                />
-                <button onClick={()=>this.signFile()}><label>Imzala</label></button>
-                <button><label>Blockchain'i Gor</label></button>
+            <div className="App" style={container}>
+                <img src='logo.png' alt="logo" style={logoStyle}/>
+                <h3>Lutfen imzalamak istediginiz dosayai asagiya yukleyiniz.</h3>
+                <div style={fileUpload}>
+                    <FilePond
+                        ref={ref => (this.filePond = ref)}
+                        files={this.state.file}
+                        allowMultiple={false}
+                        server={this.FilepondServerFile}
+                        name="files"
+                        oninit={() => this.handleInit()}
+                        onupdatefiles={fileItems => {
+                            // Set currently active file objects to this.state
+                            this.setState({
+                                file: fileItems.map(fileItem => fileItem.file)
+                            });
+                        }}
+                        width={50}
+                    />
+                </div>
+                <h3>Lutfen e-imzanizi asagiya yukleyiniz.</h3>
+                <div style={fileUpload}>
+                    <FilePond
+                        ref={ref => (this.pond = ref)}
+                        files={this.state.keyFile}
+                        allowMultiple={false}
+                        server={this.FilepondServerKey}
+                        name="key_files"
+                        oninit={() => this.handleInitKey()}
+                        onupdatefiles={fileItems => {
+                            // Set currently active file objects to this.state
+                            this.setState({
+                                keyFile: fileItems.map(fileItem => fileItem.file)
+                            });
+                        }}
+                    />
+                </div>
+                <div style={lineBreak}/>
+                <button onClick={() => this.signFile()} style={button}>
+                    <h4>Imzala</h4>
+                </button>
+                <div style={lineBreak}/>
+                <button style={button}>
+                    <h4>Blockchain'i Gor</h4>
+                </button>
+                <div style={lineBreak}/>
+                <h3>Sorulariniz Icin:</h3>
                 <label>info@bimza.online</label>
             </div>
         );
