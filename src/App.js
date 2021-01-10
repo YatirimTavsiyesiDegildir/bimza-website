@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 // FILE POND START
 // Import React FilePond
 import { FilePond} from "react-filepond";
@@ -9,7 +7,7 @@ import "filepond/dist/filepond.min.css";
 
 // FILE POND END
 
-import React, { Component, useState } from 'react';
+import React, { Component} from 'react';
 import './App.css';
 import { withAuthenticator } from 'aws-amplify-react'
 import Amplify, { Auth } from 'aws-amplify';
