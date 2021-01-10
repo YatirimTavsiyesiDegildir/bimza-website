@@ -103,15 +103,14 @@ class App extends Component {
             .then(user => {
                 let blockData = {
                     owner: user.username,
-                    file: this.state.fileBase64,
+                    file: this.state.file[0].name,
                     signature: signature
                 };
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", 'http://api.bimza.online:3001/addBlock', true);
+                xhr.open("POST", 'https://zrteptf684.execute-api.us-east-1.amazonaws.com/api/put_block', true);
 
                 //Send the proper header information along with the request
                 xhr.setRequestHeader("Content-Type", "application/json");
-                xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
 
                 xhr.onreadystatechange = function () { // Call a function when the state changes.
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
