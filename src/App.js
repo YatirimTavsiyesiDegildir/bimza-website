@@ -54,9 +54,18 @@ class App extends Component {
             // that has already been uploaded to the server (see docs)
             file: [],
             keyFile: [],
-            rsaKey: "",
+            rsaKey: "-----BEGIN RSA PRIVATE KEY-----\n" +
+                "MIIBPAIBAAJBANokx2+afSh9jZItHyWwth2/C7xRBn0nLNjymNX8L1dstvgIFsvu\n" +
+                "C3oiC+RjbASePlMM143hVHebR9IHFlB+rJcCAwEAAQJBAJe+Bc0oVe+YhqYsJQJ+\n" +
+                "zfAbOPqiEjV0zsmK163iYrwYZidztYd70gbu3mEE4PElrl1mrkufClz+v3V/oU+1\n" +
+                "w+ECIQD8L0USU5tGgPiCI8eqMtYgzyzRVSq7JBerOab1lnoV7QIhAN1xqnu/f3ue\n" +
+                "hdmJyGDRI1Yf6cCIBO93znmkk9eYCbwTAiEApg4yOzkWW7x85qTMysOiwAPrjQO5\n" +
+                "mXTQqQzTZY9qYJkCIBddffKOsyHVCSR58EWe646T0XM6JuMpjgSxw9O0vBo3AiEA\n" +
+                "zkNoh0TorG1ad44XNqWOxMoVenjREuWtVd1Iue3VFe4=\n" +
+                "-----END RSA PRIVATE KEY-----",
             fileBase64: "",
-            signature: ""
+            signature: "",
+            result: ""
         };
     }
 
@@ -112,10 +121,8 @@ class App extends Component {
                 //Send the proper header information along with the request
                 xhr.setRequestHeader("Content-Type", "application/json");
 
-                xhr.onreadystatechange = function () { // Call a function when the state changes.
-                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                        console.log('Successful.');
-                    }
+                xhr.onreadystatechange = () => { // Call a function when the state changes.
+                    this.setState({result: "Imza basarili. \"Blockchain'i Gor\" butonuna tiklayarak kontrol edebilirsiniz."})
                 };
                 xhr.send(JSON.stringify({data: blockData}));
             })
@@ -147,6 +154,10 @@ class App extends Component {
                         />
                     </div>
                     <h3>Lutfen e-imzanizi asagiya yukleyiniz.</h3>
+                    <label>.pem uzantili imza RSA private keyinizi yukleyebilirsiniz ya da bos birakarak mevcut imza ile
+                        yukleyebilirsiniz
+                        imza ile imzalayabilirsiniz.</label>
+                    <div style={lineBreak}/>
                     <div style={fileUpload}>
                         <FilePond
                             ref={ref => (this.pond = ref)}
@@ -165,15 +176,17 @@ class App extends Component {
                     </div>
                     <div style={lineBreak}/>
                     <button onClick={() => this.signFile()} style={button}>
-                        <h4>Imzala</h4>
+                        <h4>Imzala*</h4>
                     </button>
+                    <label>{this.state.result}</label>
                     <div style={lineBreak}/>
-                        <button style={button} onClick={() => window.location = 'http://api.bimza.online:3002/blocks'}>
-                            <h4>Blockchain'i Gor</h4>
-                        </button>
+                    <button style={button} onClick={() => window.location = 'http://api.bimza.online:3002/blocks'}>
+                        <h4>Blockchain'i Gor</h4>
+                    </button>
                     <div style={lineBreak}/>
                     <h3>Sorulariniz Icin:</h3>
                     <label>info@bimza.online</label>
+                    <label>(*) Test amaclidir hicbir yasal gecerliligi yoktur</label>
                 </div>
 
             </Router>);
