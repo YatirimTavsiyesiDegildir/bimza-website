@@ -13,6 +13,8 @@ import {withAuthenticator} from 'aws-amplify-react'
 import Amplify, {Auth} from 'aws-amplify';
 import aws_exports from './aws-exports';
 
+import {Link, BrowserRouter as Router} from 'react-router-dom';
+
 Amplify.configure(aws_exports);
 
 const NodeRSA = require('node-rsa');
@@ -124,56 +126,58 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App" style={container}>
-                <img src='logo.png' alt="logo" style={logoStyle}/>
-                <h3>Lutfen imzalamak istediginiz dosayai asagiya yukleyiniz.</h3>
-                <div style={fileUpload}>
-                    <FilePond
-                        ref={ref => (this.filePond = ref)}
-                        files={this.state.file}
-                        allowMultiple={false}
-                        server={this.FilepondServerFile}
-                        name="files"
-                        oninit={() => this.handleInit()}
-                        onupdatefiles={fileItems => {
-                            // Set currently active file objects to this.state
-                            this.setState({
-                                file: fileItems.map(fileItem => fileItem.file)
-                            });
-                        }}
-                        width={50}
-                    />
+            <Router>
+                <div className="App" style={container}>
+                    <img src='logo.png' alt="logo" style={logoStyle}/>
+                    <h3>Lutfen imzalamak istediginiz dosayai asagiya yukleyiniz.</h3>
+                    <div style={fileUpload}>
+                        <FilePond
+                            ref={ref => (this.filePond = ref)}
+                            files={this.state.file}
+                            allowMultiple={false}
+                            server={this.FilepondServerFile}
+                            name="files"
+                            oninit={() => this.handleInit()}
+                            onupdatefiles={fileItems => {
+                                // Set currently active file objects to this.state
+                                this.setState({
+                                    file: fileItems.map(fileItem => fileItem.file)
+                                });
+                            }}
+                            width={50}
+                        />
+                    </div>
+                    <h3>Lutfen e-imzanizi asagiya yukleyiniz.</h3>
+                    <div style={fileUpload}>
+                        <FilePond
+                            ref={ref => (this.pond = ref)}
+                            files={this.state.keyFile}
+                            allowMultiple={false}
+                            server={this.FilepondServerKey}
+                            name="key_files"
+                            oninit={() => this.handleInitKey()}
+                            onupdatefiles={fileItems => {
+                                // Set currently active file objects to this.state
+                                this.setState({
+                                    keyFile: fileItems.map(fileItem => fileItem.file)
+                                });
+                            }}
+                        />
+                    </div>
+                    <div style={lineBreak}/>
+                    <button onClick={() => this.signFile()} style={button}>
+                        <h4>Imzala</h4>
+                    </button>
+                    <div style={lineBreak}/>
+                        <button style={button} onClick={() => window.location = 'http://api.bimza.online:3002/blocks'}>
+                            <h4>Blockchain'i Gor</h4>
+                        </button>
+                    <div style={lineBreak}/>
+                    <h3>Sorulariniz Icin:</h3>
+                    <label>info@bimza.online</label>
                 </div>
-                <h3>Lutfen e-imzanizi asagiya yukleyiniz.</h3>
-                <div style={fileUpload}>
-                    <FilePond
-                        ref={ref => (this.pond = ref)}
-                        files={this.state.keyFile}
-                        allowMultiple={false}
-                        server={this.FilepondServerKey}
-                        name="key_files"
-                        oninit={() => this.handleInitKey()}
-                        onupdatefiles={fileItems => {
-                            // Set currently active file objects to this.state
-                            this.setState({
-                                keyFile: fileItems.map(fileItem => fileItem.file)
-                            });
-                        }}
-                    />
-                </div>
-                <div style={lineBreak}/>
-                <button onClick={() => this.signFile()} style={button}>
-                    <h4>Imzala</h4>
-                </button>
-                <div style={lineBreak}/>
-                <button style={button}>
-                    <h4>Blockchain'i Gor</h4>
-                </button>
-                <div style={lineBreak}/>
-                <h3>Sorulariniz Icin:</h3>
-                <label>info@bimza.online</label>
-            </div>
-        );
+
+            </Router>);
     }
 }
 
