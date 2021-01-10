@@ -128,7 +128,7 @@ class App extends Component {
             <Router>
                 <div className="App" style={container}>
                     <img src='logo.png' alt="logo" style={logoStyle}/>
-                    <h3>Lutfen imzalamak istediginiz dosayai asagiya yukleyiniz.</h3>
+                    <h3>Lutfen imzalamak istediginiz dosyayi asagiya yukleyiniz.</h3>
                     <div style={fileUpload}>
                         <FilePond
                             ref={ref => (this.filePond = ref)}
